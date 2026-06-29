@@ -21,8 +21,8 @@ Moss 共通 ESLint flat config の**単一ソース**。各プロジェクトは
 npm install -D "github:shingonagaya/moss-dev-config#v0.1.0"
 ```
 
-> private リポのため、**CI（GitHub Actions）では認証が必要**。各プロジェクトの workflow に
-> PAT もしくは deploy key を設定する（下記「CI での認証」）。
+> **public リポなので認証は不要**。ローカルも CI もそのまま `npm install` / `npm ci` で解決される。
+> （中身は lint ルールのみで秘密情報を含まないため public。実シークレットは各プロジェクトの secrets/.env で管理する）
 
 ### 2. プロジェクトの eslint.config.js
 
@@ -35,18 +35,6 @@ export default moss()
 // a11y を fail-closed にする場合:
 //   export default moss({ a11y: 'error' })
 ```
-
-## CI での認証
-
-private git 依存を `npm ci` で解決するには、`.github/workflows/*.yml` で以下のいずれか:
-
-```yaml
-# 方法A: PAT（repo read 権限）を secrets に置き、git の置換設定を入れる
-- run: git config --global url."https://${{ secrets.MOSS_CONFIG_TOKEN }}@github.com/".insteadOf "https://github.com/"
-- run: npm ci
-```
-
-または deploy key（読み取り専用）を `ssh-agent` に登録し、依存を `git+ssh://` 形式で参照する。
 
 ## バージョニング
 
