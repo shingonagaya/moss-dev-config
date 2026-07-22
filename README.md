@@ -11,7 +11,33 @@ Moss 共通 ESLint flat config の**単一ソース**。各プロジェクトは
 |---|---|---|
 | `moss/no-hardcoded-color` | error | 色のハードコード禁止。CSS変数（`var(--color-*)`）か Tailwind トークン（`bg-primary` 等）のみ |
 | `moss/no-raw-ui-element` | error | 生 `<button>` `<input>` `<select>` `<textarea>` `<dialog>` 禁止。`@/components/ui/` から import |
+| `moss/no-silent-fallback` | error | 失敗・欠落を既定値にすり替えて黙って進むコードの禁止（下記） |
 | jsx-a11y recommended | warn（既定） | アクセシビリティ。安定後に `moss({ a11y: 'error' })` で fail-closed へ昇格 |
+
+### moss/no-silent-fallback
+
+根本原因の修正が原則で、フォールバックは実装前に承認を得る——というルールが文章では守られず
+再発し続けたため、機械で止める側に移したもの。検出するのは次の4パターンだけ。
+
+| # | 検出する形 | なぜ |
+|---|---|---|
+| 1 | 捕まえた error を一度も参照せず、throw もログも失敗表示もしない `catch` | 失敗が完全に消える |
+| 2 | `.catch(() => 既定値)` | Promise レベルの握りつぶし |
+| 3 | `process.env.X \|\| ''`（空文字・null・undefined への既定値） | 未設定のまま起動し、遠く離れた場所で意味不明に失敗する |
+| 4 | `(await 呼び出し()) ?? []` | 「取得失敗」と「結果が空」の区別が消える |
+
+`??` / `||` の一律禁止は**あえてしていない**。`props.label ?? ''` まで落とすと誤検知でルールごと
+無効化されるため、実プロジェクト235ファイルにドライランして誤検知が出た形（Result 型でのエラー返却、
+`finally` 内の後始末、非空の設定既定値、`setXxx('…に失敗しました')` での UI 表示）は判定から除外済み。
+
+意図的なフォールバックは**理由付き**で明示すれば通る（対象行の直前行か、対象ブロックの内側に置く）:
+
+```ts
+// fallback-approved: 表示専用のため取得失敗時は空配列で描画する（2026-07-22 承認）
+const items = (await fetchItems()) ?? []
+```
+
+理由が空の `// fallback-approved:` は承認と見なさない。
 
 ## 使い方
 

@@ -1,7 +1,7 @@
 {
   "name": "eslint-config-moss",
-  "version": "0.1.0",
-  "description": "Moss 共通 ESLint flat config（デザイントークン強制 / UIプリミティブ強制 / jsx-a11y）。第2層ガードレールの単一ソース。",
+  "version": "0.2.0",
+  "description": "Moss 共通 ESLint flat config（デザイントークン強制 / UIプリミティブ強制 / 握りつぶし禁止 / jsx-a11y）。第2層ガードレールの単一ソース。",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -11,6 +11,9 @@
     "index.js",
     "rules"
   ],
+  "scripts": {
+    "test": "node tests/no-silent-fallback.test.js"
+  },
   "peerDependencies": {
     "eslint": ">=9"
   },

@@ -6,12 +6,14 @@ import jsxA11y from 'eslint-plugin-jsx-a11y'
 import tseslint from 'typescript-eslint'
 import noHardcodedColor from './rules/no-hardcoded-color.js'
 import noRawUiElement from './rules/no-raw-ui-element.js'
+import noSilentFallback from './rules/no-silent-fallback.js'
 
 /** moss カスタムプラグイン（再利用しやすいよう単体でも export） */
 export const mossPlugin = {
   rules: {
     'no-hardcoded-color': noHardcodedColor,
     'no-raw-ui-element': noRawUiElement,
+    'no-silent-fallback': noSilentFallback,
   },
 }
 
@@ -68,6 +70,8 @@ export function moss(options = {}) {
         // デザイントークン強制・UIプリミティブ強制は保証層（fail-closed）
         'moss/no-hardcoded-color': 'error',
         'moss/no-raw-ui-element': 'error',
+        // 失敗・欠落を既定値にすり替えて黙って進むコードを止める（fallback-approved で明示解除）
+        'moss/no-silent-fallback': 'error',
       },
     },
     // jsx-a11y は recommended が一部 error のため、初期は一律 a11y レベル（既定 warn）に統一する。
