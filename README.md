@@ -10,7 +10,7 @@ Moss 共通 ESLint flat config の**単一ソース**。各プロジェクトは
 | ルール | 重大度 | 内容 |
 |---|---|---|
 | `moss/no-hardcoded-color` | error | 色のハードコード禁止。CSS変数（`var(--color-*)`）か Tailwind トークン（`bg-primary` 等）のみ |
-| `moss/no-raw-ui-element` | error | 生 `<button>` `<input>` `<select>` `<textarea>` `<dialog>` 禁止。`@/components/ui/` から import |
+| `moss/no-raw-ui-element` | error | 生 `<button>` `<input>` `<select>` `<textarea>` `<dialog>` 禁止。生活者向けの画面は moss-ui（`@moss-inc-dev/moss-ui`）、管理画面は `@/components/ui/` の部品を使う（取り先は Skill `frontend-ui`） |
 | `moss/no-silent-fallback` | error | 失敗・欠落を既定値にすり替えて黙って進むコードの禁止（下記） |
 | jsx-a11y recommended | warn（既定） | アクセシビリティ。安定後に `moss({ a11y: 'error' })` で fail-closed へ昇格 |
 
@@ -44,7 +44,7 @@ const items = (await fetchItems()) ?? []
 ### 1. インストール（git 依存）
 
 ```bash
-npm install -D "github:shingonagaya/moss-dev-config#v0.1.0"
+npm install -D "github:shingonagaya/moss-dev-config#v0.2.1"
 ```
 
 > **public リポなので認証は不要**。ローカルも CI もそのまま `npm install` / `npm ci` で解決される。
